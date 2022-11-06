@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server for forum website",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/draicy11/forum-website.git"
+  },
+  "author": "draicy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/draicy11/forum-website/issues"
+  },
+  "homepage": "https://github.com/draicy11/forum-website#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^6.7.1"
+  }
+}
