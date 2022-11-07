@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
-const questionSchema = new mongoose.Schema({
+const answerSchema = new mongoose.Schema({
   upVotes: {
+    type: Number,
+    default: 0,
+  },
+  downVotes: {
     type: Number,
     default: 0,
   },
@@ -9,7 +13,7 @@ const questionSchema = new mongoose.Schema({
   timestamps: true,
   author: { type: Schema.Types.ObjectId, ref: "User" },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  answers: [{ type: Schema.Types.ObjectId, ref: "Answer" }],
+  question_id: { type: Schema.Types.ObjectId, ref: "Question" },
 });
 
-module.exports = mongoose.model("Question", questionSchema);
+module.exports = mongoose.model("Answer", answerSchema);
