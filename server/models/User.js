@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -6,12 +7,12 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   questions_asked: {
-    type : Number,
-    default: 0,
+    type : [{type: Schema.Types.ObjectId, ref: "Question"}],
+    default : []
   },
   questions_answered: {
-    type : Number,
-    default: 0,
+    type : [{type: Schema.Types.ObjectId, ref: "Question"}],
+    default : []
   },
 });
 

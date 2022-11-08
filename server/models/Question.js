@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const questionSchema = new mongoose.Schema({
-  upVotes: {
-    type: Number,
-    default: 0,
+const questionSchema = new mongoose.Schema(
+  {
+    upVotes: {
+      type: Number,
+      default: 0,
+    },
+    content: { type: String, required: true },
+    author: { type: Schema.Types.ObjectId, ref: "User",required: true},
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment", default: [] }],
+    answers: [{ type: Schema.Types.ObjectId, ref: "Answer", default: [] }],
   },
-  content: { type: String, required: true },
-  timestamps: true,
-  author: { type: Schema.Types.ObjectId, ref: "User" },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  answers: [{ type: Schema.Types.ObjectId, ref: "Answer" }],
-});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Question", questionSchema);
