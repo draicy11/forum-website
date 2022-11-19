@@ -5,7 +5,7 @@ const answerCommentSchema = new mongoose.Schema(
   {
     content: { type: String, required: true },
 
-    author: { type: Schema.Types.ObjectId, ref: "User" },
+    user_id: { type: Schema.Types.ObjectId, ref: "User" },
     answer_id: { type: Schema.Types.ObjectId, ref: "Answer" },
   },
   { timestamps: true }

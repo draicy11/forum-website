@@ -10,10 +10,18 @@ const userSchema = new mongoose.Schema({
     type : [{type: Schema.Types.ObjectId, ref: "Question"}],
     default : []
   },
-  questions_answered: {
-    type : [{type: Schema.Types.ObjectId, ref: "Question"}],
+  answers_given: {
+    type : [{type: Schema.Types.ObjectId, ref: "Answer"}],
     default : []
   },
+  answer_comments : {
+    type : [{type: Schema.Types.ObjectId, ref:"AnswerComment"}],
+    default : []
+  },
+  question_comments : {
+    type : [{type: Schema.Types.ObjectId, ref:"QuestionComment"}],
+    default : []
+  }
 });
 
 module.exports = mongoose.model("User", userSchema);

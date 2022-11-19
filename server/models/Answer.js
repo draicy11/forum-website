@@ -13,7 +13,7 @@ const answerSchema = new mongoose.Schema(
     },
     content: { type: String, required: true },
 
-    author: { type: Schema.Types.ObjectId, ref: "User" },
+    user_id: { type: Schema.Types.ObjectId, ref: "User" },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     question_id: { type: Schema.Types.ObjectId, ref: "Question" },
   },

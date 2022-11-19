@@ -1,49 +1,57 @@
 const express = require("express");
 const router = express.Router();
 const userModel = require("../models/User");
-
+const deleteUser = require("../utils/delete/deleteUser");
 // get one user
 
-router.get("/get", async (req, res) => {
+router.get("/", async (req, res) => {
   if (!req.body) {
-    res.status(500).json({ message: "body-parser not working" });
+    return res.status(500).json({ message: "body-parser not working" });
   }
   if (!req.body.user_id) {
-    res.status(400).json({ message: "user_id not passed" });
+    return res.status(400).json({ message: "user_id not passed" });
   }
   const user_id = req.body.user_id;
 
-  const user = await userModel
+  await userModel
     .findOne({ id: user_id })
-    // .populate('questions_asked')
-    .then()
+    .then((user) => {
+      if (!user) {
+        return res.status(500).json({ message: "something went wrong." });
+      }
+      return res.status(200).json({ user: user });
+    })
     .catch((err) => {
-      res.status(404).json({ message: "user not found",error: err.message  });
+      return res.status(404).json({ message: "user not found", error: err.message });
     });
-  res.status(200).json({ user: user });
 });
 
 // gets all the users
 
 router.get("/getall", async (req, res) => {
-  const users = await userModel
+  await userModel
     .find()
-    .then()
+    .then((users) => {
+      if (!users) {
+        return res.status(500).json({ message: "something went wrong." });
+      }
+      return res.status(200).json({ user: users });
+    })
     .catch((err) => {
-      res.status(404).json({ message: "user not found", error: err.message });
+      return res.status(404).json({ message: "user not found", error: err.message });
     });
-  res.status(200).json({ users: users });
+  
 });
 
 // creates a users
 
-router.post("/create", async (req, res) => {
+router.post("/", async (req, res) => {
   if (!req.body) {
-    res.status(500).json({ message: "body-parser not working" });
+    return res.status(500).json({ message: "body-parser not working" });
   }
 
   if (!req.body.name) {
-    res.status(400).json({ message: "name not passed" });
+    return res.status(400).json({ message: "name not passed" });
   }
   const name = req.body.name;
   const user = new userModel({
@@ -52,7 +60,10 @@ router.post("/create", async (req, res) => {
   await user
     .save()
     .then((u) => {
-      return res.status(201).json({ message: "created user",user : u });
+      if (!u) {
+        return res.status(500).json({ message: "something went wrong." });
+      }
+      return res.status(201).json({ message: "created user", user: u });
     })
     .catch((err) => {
       return res.status(500).json({ error: err.message });
@@ -61,22 +72,21 @@ router.post("/create", async (req, res) => {
 
 // deletes a user
 
-router.delete("/delete", async (req, res) => {
+router.delete("/", async (req, res) => {
   if (!req.body) {
-    res.status(500).json({ message: "body-parser not working" });
+    return res.status(500).json({ message: "body-parser not working" });
   }
   if (!req.body.user_id) {
-    res.status(400).json({ message: "user_id not passed" });
+    return res.status(400).json({ message: "user_id not passed" });
   }
   const user_id = req.body.user_id;
 
-  await userModel
-    .findByIdAndDelete(user_id)
-    .then((deleted_user) => {
-      res.status(200).json({ message: "user deleted successfully" , deleted_user : deleted_user});
+  await deleteUser(user_id)
+    .then((result) => {
+      return res.status(200).json({ message: result.message });
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ message: err.message });
     });
 });
 
@@ -84,35 +94,41 @@ router.delete("/delete", async (req, res) => {
 
 router.delete("/deleteall", async (req, res) => {
   await userModel
-    .deleteMany()
-    .then(() => {
-      res.status(200).json({ message: "users deleted successfully" });
+    .find()
+    .then((users) => {
+      users.forEach(async (user) => {
+        await deleteUser(user._id).catch((err) => {
+          return res.status(500).json({ message: err.message });
+        });
+        return res.status(200).json({ message: "deleted users successfully" });
+      });
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ error: err.message });
     });
 });
 
 // updates a user's name
 
-router.patch("/updatename", async (req, res) => {
+router.patch("/", async (req, res) => {
   if (!req.body) {
-    res.status(500).json({ message: "body-parser not working" });
+    return res.status(500).json({ message: "body-parser not working" });
   }
   if (!req.body.user_id) {
-    res.status(400).json({ message: "user_id not passed" });
+    return res.status(400).json({ message: "user_id not passed" });
   }
   if (!req.body.name) {
-    res.status(400).json({ message: "name not passed" });
+    return res.status(400).json({ message: "name not passed" });
   }
   const user_id = req.body.user_id;
   const name = req.body.name;
   await userModel
     .findByIdAndUpdate(user_id, { name: name })
     .then((u) => {
-      res
-        .status(200)
-        .json({ message: "updated successfully", user: u });
+      if (!u) {
+        return res.status(500).json({ message: "something went wrong." });
+      }
+      res.status(200).json({ message: "updated successfully", user: u });
     })
     .catch((err) => {
       res.status(500).json({ error: err.message });

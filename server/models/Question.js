@@ -8,7 +8,7 @@ const questionSchema = new mongoose.Schema(
       default: 0,
     },
     content: { type: String, required: true },
-    author: { type: Schema.Types.ObjectId, ref: "User",required: true},
+    user_id: { type: Schema.Types.ObjectId, ref: "User",required: true},
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment", default: [] }],
     answers: [{ type: Schema.Types.ObjectId, ref: "Answer", default: [] }],
   },
